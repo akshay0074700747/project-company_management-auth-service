@@ -14,6 +14,6 @@ func main() {
 		log.Fatal("cannot load configurations", err)
 	}
 
-	injectdependency.Initialize(config).Start(":50004")
+	injectdependency.Initialize(config).Start(":50004")    
 
 }
