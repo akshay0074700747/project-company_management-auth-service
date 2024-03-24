@@ -12,6 +12,8 @@ type Config struct {
 	DBport     string
 	DBuser     string
 	DBpassword string
+	AdminEmail string
+	AdminPass  string
 }
 
 func LoadConfigurations() (Config, error) {
@@ -27,6 +29,8 @@ func LoadConfigurations() (Config, error) {
 	conf.DBname = os.Getenv("dbname")
 	conf.DBpassword = os.Getenv("dbpassword")
 	conf.DBuser = os.Getenv("dbuser")
+	conf.AdminEmail = os.Getenv("admin_email")
+	conf.AdminPass = os.Getenv("admin_password")
 
 	return conf, nil
 }

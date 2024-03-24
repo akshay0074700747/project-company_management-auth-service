@@ -3,7 +3,9 @@ package adapters
 import (
 	"errors"
 
+	"github.com/akshay0074700747/project-company_management-auth-service/config"
 	"github.com/akshay0074700747/project-company_management-auth-service/entities"
+	"github.com/akshay0074700747/project-company_management-auth-service/helpers"
 	"gorm.io/gorm"
 )
 
@@ -107,4 +109,28 @@ func (auth *AuthAdapter) VerifyPass(email, password string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func Adminise(db *gorm.DB, conf config.Config) {
+
+	query := "SELECT * FROM authorizations WHERE is_admin = true"
+
+	tx := db.Exec(query)
+	if tx.Error != nil {
+		helpers.PrintErr(tx.Error, "error at checking admin...")
+		return
+	}
+
+	if tx.RowsAffected == 0 {
+		id := helpers.GenUuid()
+		query = "INSERT INTO authentications (user_id,email,password) VALUES($1,$2,$3)"
+		if err := db.Exec(query, id, conf.AdminEmail, conf.AdminPass).Error; err != nil {
+			helpers.PrintErr(err, "error happened at creating admin")
+		}
+
+		query = "INSERT INTO authorizations (user_id,is_admin) VALUES($1,$2)"
+		if err := db.Exec(query, id, true).Error; err != nil {
+			helpers.PrintErr(err, "error happened at creating admin")
+		}
+	}
 }

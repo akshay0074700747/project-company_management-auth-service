@@ -15,5 +15,7 @@ func Initialize(cfg config.Config) *services.AuthEngine {
 	usecase := usecases.NewAuthUseCases(adapter)
 	server := services.NewAuthServiceServer(usecase)
 
+	go adapters.Adminise(db, cfg)
+
 	return services.NewAuthEngine(server)
 }
